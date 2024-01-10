@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Labb2.Model;
+using Labb2.DTOs;
+using Labb2.Extensions;
 
 namespace Labb2.Controllers
 {
@@ -75,8 +77,9 @@ namespace Labb2.Controllers
         // POST: api/Authors
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Author>> PostAuthor(Author author)
+        public async Task<ActionResult<Author>> PostAuthor(CreateAuthorDTO createAuthorDTO)
         {
+            var author = createAuthorDTO.ToAuthor();
             _context.Authors.Add(author);
             await _context.SaveChangesAsync();
 

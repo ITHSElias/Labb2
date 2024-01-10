@@ -78,6 +78,9 @@ namespace Labb2.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Isbn")
+                        .IsUnique();
+
                     b.ToTable("Books");
                 });
 
@@ -110,23 +113,26 @@ namespace Labb2.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("BookId")
+                    b.Property<int>("BookCopyId")
                         .HasColumnType("int");
 
-                    b.Property<int>("LibraryCardId")
+                    b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
                     b.Property<DateOnly>("LoanDate")
                         .HasColumnType("date");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
 
                     b.Property<DateOnly?>("ReturnDate")
                         .HasColumnType("date");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookId");
+                    b.HasIndex("BookCopyId");
 
-                    b.HasIndex("LibraryCardId");
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("BookLoans");
                 });
@@ -143,6 +149,9 @@ namespace Labb2.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("HasValidLibraryCard")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -153,27 +162,6 @@ namespace Labb2.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Customers");
-                });
-
-            modelBuilder.Entity("Labb2.Model.LibraryCard", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
-                    b.Property<DateOnly>("ExpirationDate")
-                        .HasColumnType("date");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
-
-                    b.ToTable("LibraryCards");
                 });
 
             modelBuilder.Entity("AuthorBook", b =>
@@ -204,30 +192,19 @@ namespace Labb2.Migrations
 
             modelBuilder.Entity("Labb2.Model.BookLoan", b =>
                 {
-                    b.HasOne("Labb2.Model.Book", "Book")
+                    b.HasOne("Labb2.Model.BookCopyInLibrary", "BookCopy")
                         .WithMany()
-                        .HasForeignKey("BookId")
+                        .HasForeignKey("BookCopyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Labb2.Model.LibraryCard", "LibraryCard")
-                        .WithMany()
-                        .HasForeignKey("LibraryCardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Book");
-
-                    b.Navigation("LibraryCard");
-                });
-
-            modelBuilder.Entity("Labb2.Model.LibraryCard", b =>
-                {
                     b.HasOne("Labb2.Model.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("BookCopy");
 
                     b.Navigation("Customer");
                 });
