@@ -27,13 +27,11 @@ namespace Labb2.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BookCopyInLibraryDTO>>> GetBookCopiesInLibrary()
         {
-            var bookCopiesInLibrary = await _context.BookCopiesInLibrary.Include(bookCopy => bookCopy.Book).ThenInclude(book => book.Authors).ToListAsync();
-            List<BookCopyInLibraryDTO> bookCopyInLibraryDTOs = [];
-            foreach(var bookCopyInLibrary in bookCopiesInLibrary)
-            {
-                bookCopyInLibraryDTOs.Add(bookCopyInLibrary.ToBookCopyInLibraryDTO());
-            }
-            return bookCopyInLibraryDTOs;
+            return await _context.BookCopiesInLibrary
+                .Include(bookCopy => bookCopy.Book)
+                .ThenInclude(book => book.Authors)
+                .Select(b => b.ToBookCopyInLibraryDTO())
+                .ToListAsync();
         }
 
         // GET: api/BookCopiesInLibrary/5

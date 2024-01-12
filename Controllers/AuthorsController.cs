@@ -26,13 +26,10 @@ namespace Labb2.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AuthorDTO>>> GetAuthors()
         {
-            List<Author> authors = await _context.Authors.Include(author => author.Books).ToListAsync();
-            List<AuthorDTO> authorDTOs = new();
-            foreach(var author in authors)
-            {
-                authorDTOs.Add(author.ToAuthorDTO());
-            }
-            return authorDTOs;
+            return await _context.Authors
+                .Include(author => author.Books)
+                .Select(a => a.ToAuthorDTO())
+                .ToListAsync();
         }
 
         // GET: api/Authors/5

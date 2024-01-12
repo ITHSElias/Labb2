@@ -8,6 +8,7 @@ public class BookLoan
     public required BookCopyInLibrary BookCopy { get; set; } 
     public DateOnly LoanDate { get; set; }
     public DateOnly? ReturnDate { get; set; }
+    public bool IsReturned { get; set; } = false;
     [Range(1,10)]
-    public int Rating { get; set; }
+    public int? Rating { get; set; }
 }

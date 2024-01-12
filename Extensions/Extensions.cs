@@ -33,6 +33,15 @@ public static class Extensions
             HasValidLibraryCard = createCustomerDTO.HasValidLibraryCard
         };
     }
+    public static BookLoan ToBookLoan(this LoanBookDTO loanBookDTO, Customer customer, BookCopyInLibrary bookCopy)
+    {
+        return new BookLoan
+        {
+            Customer = customer,
+            BookCopy = bookCopy,
+            LoanDate = DateOnly.FromDateTime(DateTime.Now),
+        };
+    }
     public static BookDTO ToBookDTO(this Book book)
     {
         var bookDTO = new BookDTO

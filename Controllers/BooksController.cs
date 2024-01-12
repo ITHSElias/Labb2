@@ -27,13 +27,10 @@ namespace Labb2.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BookDTO>>> GetBooks()
         {
-            var books = await _context.Books.Include(book => book.Authors).ToListAsync();
-            var booksDTO = new List<BookDTO>();
-            foreach(var book in books)
-            {
-                booksDTO.Add(book.ToBookDTO());
-            }
-            return booksDTO;
+            return await _context.Books
+                .Include(book => book.Authors)
+                .Select(b => b.ToBookDTO())
+                .ToListAsync();
         }
 
         // GET: api/Books/5
@@ -45,9 +42,9 @@ namespace Labb2.Controllers
             {
                 return NotFound();
             }
-            _context.Entry(book)
+            await _context.Entry(book)
                 .Collection(b => b.Authors)
-                .Load();
+                .LoadAsync();
             
             return book.ToBookDTO();
         }

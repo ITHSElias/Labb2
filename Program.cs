@@ -12,13 +12,12 @@ builder.Services.AddControllers().AddJsonOptions(opt =>
 
 builder.Services.AddDbContext<AppDbContext>(o => 
 { 
-    string connectionString = builder.Configuration.GetConnectionString("DbCon"); //Vid byte mellan lokal databas och azure byt både denna och DbPassword
-    
-    //Har inte fått user-secrets att fungera, se över det om det finns tid
-    /*var connBuilder = new SqlConnectionStringBuilder(connectionString) 
+    string connectionString = builder.Configuration.GetConnectionString("AzureDbCon")!;
+    var connBuilder = new SqlConnectionStringBuilder(connectionString) 
     {
-        Password = builder.Configuration["DbPassword"]
-    };*/
+        Password = builder.Configuration["AzureDbPassword"]
+    };
+    connectionString = connBuilder.ToString();
 
     o.UseSqlServer(connectionString); 
     o.LogTo(m => Debug.WriteLine(m)).EnableSensitiveDataLogging(true);
