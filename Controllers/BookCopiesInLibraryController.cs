@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Labb2.Model;
+using Labb2.DTOs;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Labb2.Extensions;
 
 namespace Labb2.Controllers
 {
@@ -22,14 +25,20 @@ namespace Labb2.Controllers
 
         // GET: api/BookCopiesInLibrary
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BookCopyInLibrary>>> GetBookCopiesInLibrary()
+        public async Task<ActionResult<IEnumerable<BookCopyInLibraryDTO>>> GetBookCopiesInLibrary()
         {
-            return await _context.BookCopiesInLibrary.ToListAsync();
+            var bookCopiesInLibrary = await _context.BookCopiesInLibrary.Include(bookCopy => bookCopy.Book).ThenInclude(book => book.Authors).ToListAsync();
+            List<BookCopyInLibraryDTO> bookCopyInLibraryDTOs = [];
+            foreach(var bookCopyInLibrary in bookCopiesInLibrary)
+            {
+                bookCopyInLibraryDTOs.Add(bookCopyInLibrary.ToBookCopyInLibraryDTO());
+            }
+            return bookCopyInLibraryDTOs;
         }
 
         // GET: api/BookCopiesInLibrary/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BookCopyInLibrary>> GetBookCopyInLibrary(int id)
+        public async Task<ActionResult<BookCopyInLibraryDTO>> GetBookCopyInLibrary(int id)
         {
             var bookCopyInLibrary = await _context.BookCopiesInLibrary.FindAsync(id);
 
@@ -37,10 +46,16 @@ namespace Labb2.Controllers
             {
                 return NotFound();
             }
+            _context.Entry(bookCopyInLibrary)
+                .Reference(b => b.Book)
+                .Load();
+            _context.Entry(bookCopyInLibrary.Book)
+                .Collection(b => b.Authors)
+                .Load();
 
-            return bookCopyInLibrary;
+            return bookCopyInLibrary.ToBookCopyInLibraryDTO();
         }
-
+/*
         // PUT: api/BookCopiesInLibrary/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -71,12 +86,20 @@ namespace Labb2.Controllers
 
             return NoContent();
         }
-
+*/
         // POST: api/BookCopiesInLibrary
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<BookCopyInLibrary>> PostBookCopyInLibrary(BookCopyInLibrary bookCopyInLibrary)
+        public async Task<ActionResult<BookCopyInLibrary>> PostBookCopyInLibrary(CreateBookCopyInLibraryDTO createBookCopyInLibraryDTO)
         {
+            var bookCopyInLibrary = new BookCopyInLibrary
+            {
+                Book = _context.Books.SingleOrDefault(b => b.Isbn == createBookCopyInLibraryDTO.Isbn)! 
+            };
+            if (bookCopyInLibrary.Book == null)
+            {
+                return NotFound();
+            }
             _context.BookCopiesInLibrary.Add(bookCopyInLibrary);
             await _context.SaveChangesAsync();
 

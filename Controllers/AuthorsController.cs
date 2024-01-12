@@ -24,9 +24,15 @@ namespace Labb2.Controllers
 
         // GET: api/Authors
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Author>>> GetAuthors()
+        public async Task<ActionResult<IEnumerable<AuthorDTO>>> GetAuthors()
         {
-            return await _context.Authors.ToListAsync();
+            List<Author> authors = await _context.Authors.Include(author => author.Books).ToListAsync();
+            List<AuthorDTO> authorDTOs = new();
+            foreach(var author in authors)
+            {
+                authorDTOs.Add(author.ToAuthorDTO());
+            }
+            return authorDTOs;
         }
 
         // GET: api/Authors/5
@@ -43,6 +49,7 @@ namespace Labb2.Controllers
             return author;
         }
 
+/*
         // PUT: api/Authors/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -73,7 +80,7 @@ namespace Labb2.Controllers
 
             return NoContent();
         }
-
+*/
         // POST: api/Authors
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
