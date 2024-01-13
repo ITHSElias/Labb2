@@ -90,7 +90,7 @@ namespace Labb2.Controllers
             foreach(int authorId in createBookDTO.AuthorIds)
             {
                 var author = _context.Authors.SingleOrDefault(i => i.Id == authorId);
-                book.Authors.Add(author);
+                book.Authors.Add(author!);
             }
             await _context.SaveChangesAsync();
 
