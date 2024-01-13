@@ -26,7 +26,11 @@ namespace Labb2.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BookLoan>>> GetBookLoans()
         {
-            return await _context.BookLoans.Include(b => b.BookCopy).Include(b => b.Customer).ToListAsync();
+            return await _context.BookLoans
+                .Include(b => b.BookCopy)
+                .ThenInclude(b => b.Book)
+                .Include(b => b.Customer)
+                .ToListAsync();
         }
 
         // GET: api/BookLoans/5
