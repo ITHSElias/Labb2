@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "rPXka+N/NIW9TyAGZKH3mGG7ai4tf9/ORc3F3kqqAp8k5qGSrCcqCUWa1xKK+llG5cAyIriX5og30J6iTbzF9g==",
+  "dgSpecHash": "+QYYy6PJ3d4MEeEeBKhGxvVAMxKBLsjzGDA+V1ZLSKlgmb5QnK0URLMFApsMXy+E9CumFq9epoKDkuH9S5+2Gw==",
   "success": true,
-  "projectFilePath": "/Users/elias/Desktop/ITHS projects/Utveckling mot DB/Inlämningar/Labb2/Labb2.csproj",
+  "projectFilePath": "/Users/elias/Desktop/ITHSProjects/Utveckling mot DB/Inlämningar/Labb2/Labb2.csproj",
   "expectedPackageFiles": [
     "/Users/elias/.nuget/packages/azure.core/1.25.0/azure.core.1.25.0.nupkg.sha512",
     "/Users/elias/.nuget/packages/azure.identity/1.7.0/azure.identity.1.7.0.nupkg.sha512",

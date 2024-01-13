@@ -53,7 +53,7 @@ public static class Extensions
         };
         foreach(var author in book.Authors)
         {
-            bookDTO.Authors.Add(new CreateAuthorDTO{ FirstName = author.FirstName, LastName = author.LastName });
+            bookDTO.Authors.Add($"{author.FirstName} {author.LastName}");
         }
         return bookDTO;
     }

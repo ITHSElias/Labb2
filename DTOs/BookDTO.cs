@@ -6,5 +6,5 @@ public class BookDTO
     public string Isbn { get; set; } = null!; //Needs to be string to allow for a leading zero
     public string Title { get; set; } = null!;
     public int ReleaseYear { get; set; }
-    public List<CreateAuthorDTO> Authors { get; set; } = new();
+    public List<string> Authors { get; set; } = new();
 }
